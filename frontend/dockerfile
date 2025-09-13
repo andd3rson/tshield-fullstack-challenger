@@ -1,0 +1,25 @@
+# Use a Node.js image to build the Angular application
+FROM node:18-alpine as builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# Use a lightweight Nginx image to serve the built application
+FROM nginx:alpine
+
+# Copy the built Angular application from the builder stage
+COPY --from=builder /app/dist/to-do/browser /usr/share/nginx/html
+
+# Copy a custom Nginx configuration if needed (optional)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
