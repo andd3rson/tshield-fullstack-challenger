@@ -7,7 +7,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TasksService {
- private baseUrl = 'https://localhost:7284/tasks'; // ajuste conforme seu backend
+ private baseUrl = 'http://localhost:7284/tasks'; // ajuste conforme seu backend
 
   constructor(private http: HttpClient) {}
 

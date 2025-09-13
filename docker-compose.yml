@@ -1,0 +1,40 @@
+version: '3.8'
+
+networks:
+  tshield-network:
+    driver: bridge
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: src/ToDo.Api/Dockerfile
+    ports:
+      - "7284:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=TodoDb;User=sa;Password=Pas5sword@!!123;
+    depends_on:
+      - db
+    networks:
+      - tshield-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - tshield-network
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "Pas5sword@!!123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - tshield-network
