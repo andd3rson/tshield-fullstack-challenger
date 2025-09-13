@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ToDo.Api.Domain;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ToDo.Api.Infra.Configurations;
 
@@ -22,7 +20,7 @@ public class TasksConfiguration : IEntityTypeConfiguration<Tasks>
             .HasColumnType("varchar(300)");
 
         builder.Property(pk => pk.IsDone)
-            .IsRequired()
+            .IsRequired()            
             .HasColumnName("done")
             .HasColumnType("bit");
 

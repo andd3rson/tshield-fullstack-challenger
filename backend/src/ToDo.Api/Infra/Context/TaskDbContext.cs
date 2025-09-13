@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ToDo.Api.Domain;
-
-namespace ToDo.Api.Infra.Context;
+﻿namespace ToDo.Api.Infra.Context;
 
 public class TaskDbContext : DbContext
 {
@@ -29,7 +26,7 @@ public class TaskDbContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 }

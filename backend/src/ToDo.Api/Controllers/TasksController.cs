@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDo.Api.Dtos.Requests;
 
 namespace ToDo.Api.Controllers;
 
@@ -7,23 +6,36 @@ namespace ToDo.Api.Controllers;
 [Route("tasks")]
 public class TasksController : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> Get()
+    private readonly ITaskServices _taskServices;
+
+    public TasksController(ITaskServices taskServices)
     {
-        return Ok();
+        _taskServices = taskServices;
     }
 
-    //GET /tasks/{id}
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] string? search)
+        => Ok(await _taskServices.GetAsync(search));
+
+
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        return Ok();
+        var response = await _taskServices.GetByIdAsync(id);
+        if (response == null) {
+
+            return NotFound();
+        }
+        return Ok(response);
     }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] TaskCreateRequest createRequest)
     {
-        return Ok();
+        
+        var response = await _taskServices.AddAsync(createRequest);
+       
+        return response > 0 ? Created($"/tasks/{response}", new {}) : BadRequest();
     }
 
     [HttpPut("{id}")]
@@ -33,14 +45,16 @@ public class TasksController : ControllerBase
         {
             return BadRequest();
         }
+        var response = await _taskServices.UpdateAsync(updateRequest);
 
-        return NoContent();
-    }
+        return response ? NoContent() : BadRequest();
+     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        return NoContent();
+        var response = await _taskServices.DeleteAsync(id);
+        return response ? NoContent() : BadRequest();
     }
 
 }
