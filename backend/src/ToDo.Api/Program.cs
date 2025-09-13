@@ -23,6 +23,16 @@ builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsi
 
 builder.Services.AddValidatorsFromAssemblyContaining<TaskCreateValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<TaskUpdateValidation>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "MyAllowSpecificOrigins",
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()                                             
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
 
 
 var app = builder.Build();
@@ -35,10 +45,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("MyAllowSpecificOrigins"); 
 
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();

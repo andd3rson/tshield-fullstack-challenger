@@ -2,3 +2,26 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.container {
+  padding: 16px;
+    margin: 0 auto;
+  max-width: 60vw;
+    min-height: 80vh;
+}
+.search-row {
+  display: flex;
+  margin-bottom: 12px;
+  justify-content: end;
+}
+.search-field {
+    float: right;
+  
+}
+.spacer { flex: 1 1 auto; }
+.empty {
+  text-align: center;
+  padding: 24px;
+  color: rgba(0,0,0,0.6);
+}
+.center { display:flex; justify-content:center; padding: 16px; }
+table { width: 100%; }
