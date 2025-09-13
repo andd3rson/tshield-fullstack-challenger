@@ -1,15 +1,33 @@
+
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using ToDo.Api.Application.Validations;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<TaskDbContext>(
+        x => x.UseSqlServer(
+            builder.Configuration.GetConnectionString("taskConnection")
+            )
+    );
+builder.Services.AddScoped<ITaskServices, TaskServices>();
+
+
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<TaskCreateValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<TaskUpdateValidation>();
+
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -21,5 +39,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
